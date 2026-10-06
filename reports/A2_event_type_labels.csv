@@ -1,0 +1,21 @@
+raw_label,clean_label,n
+CONCERT,concert,14
+Concert,concert,6
+Conference,conference,19
+Exhibition,exhibition,3
+Football Match,football_match,15
+Public Holiday,public_holiday,5
+Road closure,road_closure,3
+School Break,school_break,1
+Sports Run,sports_run,1
+concert,concert,8
+conference,conference,19
+exhibition,exhibition,4
+football match ,football_match,14
+football_match,football_match,22
+public holiday,public_holiday,2
+public_holiday,public_holiday,6
+road closure,road_closure,11
+road_closure,road_closure,9
+school_break,school_break,1
+sports_run,sports_run,2

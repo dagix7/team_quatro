@@ -1,0 +1,29 @@
+A5 JOIN PROOF
+
+--- rain-affected: Lideta at 2025-05-02 19:00:00 (EAT), trips=77.0
+weather row used (EAT 2025-05-02 19:00:00 = file timestamp 2025-05-02 16:00:00 UTC): rain_mm=6.1, rain_3h=27.2, temp_c=20.3, rain_class=2
+raw weather rows:
+           timestamp  temp_c  rain_mm  humidity_pct  wind_kmh data_type
+2025-05-02T16:00:00Z    20.3      6.1          78.0       5.3  observed
+event/holiday features set: is_holiday=0
+event window rows:
+(none)
+
+--- inside a football window: Kazanchis at 2025-01-19 15:00:00 (EAT), trips=13.0
+weather row used (EAT 2025-01-19 15:00:00 = file timestamp 2025-01-19 12:00:00 UTC): rain_mm=0.0, rain_3h=0.0, temp_c=23.7, rain_class=0
+raw weather rows:
+           timestamp  temp_c  rain_mm  humidity_pct  wind_kmh data_type
+2025-01-19T12:00:00Z    23.7      0.0          56.0      14.0  observed
+event/holiday features set: ev_football_match_during=1, ev_n_windows=1, ev_attendance_log=9.68084387626357, is_holiday=1
+event window rows:
+event_id     event_type      zone                  ts  phase  attendance  matched
+EVT-0004 football_match Kazanchis 2025-01-19 15:00:00 during     16007.0     True
+
+--- public holiday: Arat Kilo at 2025-01-07 00:00:00 (EAT), trips=4.0
+weather row used (EAT 2025-01-07 00:00:00 = file timestamp 2025-01-06 21:00:00 UTC): rain_mm=0.0, rain_3h=0.0, temp_c=8.7, rain_class=0
+raw weather rows:
+           timestamp  temp_c  rain_mm  humidity_pct  wind_kmh data_type
+2025-01-06T21:00:00Z     8.7      0.0           NaN      10.0  observed
+event/holiday features set: is_holiday=1
+event window rows:
+(none)

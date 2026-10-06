@@ -1,0 +1,139 @@
+table,raw_label,n
+events,ALL,3
+events,AYAT,2
+events,All zones,2
+events,Arat Kilo & SARBET,1
+events,Ayat,1
+events,Ayat & Lideta,1
+events,BOLE,5
+events,Bole,29
+events,Bole (Bole subcity),10
+events,CMC,1
+events,Citywide,9
+events,Gerji,1
+events,KAZANCHIS,19
+events,Kazanchis,39
+events,Kazanchis & Arat Kilo,1
+events,Kazanchis (Kirkos),23
+events,Kolfe,1
+events,Kolfe Keranio,1
+events,Lideta,2
+events,Lideta & KAZANCHIS,2
+events,MEGENAGNA,1
+events,Megenagna,1
+events,Piassa,3
+events,Piassa (Arada),2
+events,Piazza,1
+events,arat kilo,1
+events,city-wide,1
+events,cmc,2
+trips_test,ARAT KILO,37
+trips_test,AYAT,45
+trips_test,Arat  Kilo,30
+trips_test,Arat Kilo,208
+trips_test,Arat Kilo ,38
+trips_test,Ayat,204
+trips_test,Ayat ,46
+trips_test,BOLE,35
+trips_test,Bole,222
+trips_test,Bole ,30
+trips_test,Bole Rd,26
+trips_test,C.M.C,44
+trips_test,CMC,209
+trips_test,CMC ,43
+trips_test,GERJI,50
+trips_test,Gerji,196
+trips_test,Gerji ,41
+trips_test,KAZANCHIS,31
+trips_test,KOLFE,31
+trips_test,Kazanches,39
+trips_test,Kazanchis,201
+trips_test,Kazanchis ,35
+trips_test,Kolfe,194
+trips_test,Kolfe ,41
+trips_test,Kolfe Keranio,36
+trips_test,LIDETA,36
+trips_test,Lideta,208
+trips_test,Lideta ,52
+trips_test,MEGENAGNA,36
+trips_test,MERKATO,28
+trips_test,Megenaga,28
+trips_test,Megenagna,203
+trips_test,Megenagna ,31
+trips_test,Mercato,26
+trips_test,Merkato,223
+trips_test,Merkato ,35
+trips_test,PIASSA,31
+trips_test,Piassa,208
+trips_test,Piassa ,29
+trips_test,Piazza,36
+trips_test,SARBET,35
+trips_test,Sarbet,218
+trips_test,Sarbet ,42
+trips_test,arat kilo,23
+trips_test,ayat,41
+trips_test,bole,23
+trips_test,cmc,40
+trips_test,gerji,49
+trips_test,kazanchis,30
+trips_test,kolfe,34
+trips_test,lideta,40
+trips_test,megenagna,38
+trips_test,merkato,24
+trips_test,piassa,32
+trips_test,sarbet,41
+trips_train,ARAT KILO,677
+trips_train,AYAT,675
+trips_train,Arat  Kilo,705
+trips_train,Arat Kilo,4506
+trips_train,Arat Kilo ,655
+trips_train,Ayat,3382
+trips_train,Ayat ,721
+trips_train,BOLE,674
+trips_train,Bole,4507
+trips_train,Bole ,710
+trips_train,Bole Rd,689
+trips_train,C.M.C,880
+trips_train,CMC,4559
+trips_train,CMC ,945
+trips_train,GERJI,915
+trips_train,Gerji,4523
+trips_train,Gerji ,906
+trips_train,KAZANCHIS,704
+trips_train,KOLFE,688
+trips_train,Kazanches,657
+trips_train,Kazanchis,4550
+trips_train,Kazanchis ,674
+trips_train,Kolfe,4456
+trips_train,Kolfe ,726
+trips_train,Kolfe Keranio,681
+trips_train,LIDETA,912
+trips_train,Lideta,4514
+trips_train,Lideta ,944
+trips_train,MEGENAGNA,664
+trips_train,MERKATO,753
+trips_train,Megenaga,652
+trips_train,Megenagna,4593
+trips_train,Megenagna ,701
+trips_train,Mercato,660
+trips_train,Merkato,4470
+trips_train,Merkato ,686
+trips_train,PIASSA,718
+trips_train,Piassa,4563
+trips_train,Piassa ,641
+trips_train,Piazza,639
+trips_train,SARBET,925
+trips_train,Sarbet,4446
+trips_train,Sarbet ,945
+trips_train,arat kilo,729
+trips_train,ayat,729
+trips_train,bole,689
+trips_train,cmc,886
+trips_train,gerji,924
+trips_train,kazanchis,694
+trips_train,kolfe,714
+trips_train,lideta,906
+trips_train,megenagna,655
+trips_train,merkato,697
+trips_train,piassa,707
+trips_train,sarbet,939

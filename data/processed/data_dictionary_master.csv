@@ -1,0 +1,54 @@
+column,type,source,description,derivation,known_at_forecast_time
+row_id,string,ride_demand_train/test.csv,Row identifier (train: record_id),copied; first id kept for merged duplicates,yes
+zone,category,all three tables,One of 12 canonical zones,clean_zone() label map,yes
+ts,datetime (EAT),ride_demand_*.csv pickup_hour,"Start of the hour, Addis local time",parse_mixed(); +03:00 dropped,yes
+trips,float (target),ride_demand_train.csv,Trips requested in the zone-hour (train only),negatives -> missing and dropped; x8 corrupted counts (trips/active_drivers > 2.5) divided by 8; duplicate zone-hours averaged,no (target)
+hour,int,ts,Hour of day 0-23,ts.hour,yes
+dow,int,ts,"Day of week, Monday=0",ts.dayofweek,yes
+is_weekend,int,ts,Saturday or Sunday,dow >= 5,yes
+hour_of_week,int,ts,0-167 position in the week,dow*24+hour,yes
+day_of_month,int,ts,Day of month,ts.day,yes
+month,int,ts,Month 1-12,ts.month,yes
+is_payday_window,int,ts,Last days / first days of the month,day >= 25 or day <= 3,yes
+is_holiday,int,events_calendar.csv,Public holiday date,date within a public_holiday event,yes
+is_holiday_eve,int,events_calendar.csv,Day before a public holiday,next day is a holiday,yes
+is_school_break,int,events_calendar.csv,Date inside a school break,date within a school_break event,yes
+temp_c,float,weather_hourly.csv,"Air temperature, deg C (July F values converted)",join on EAT hour (weather +3 h),yes
+rain_mm,float,weather_hourly.csv,"Rain in the previous hour, mm (-9999 -> 0)",join on EAT hour,yes
+humidity_pct,float,weather_hourly.csv,Relative humidity %,join on EAT hour,yes
+wind_kmh,float,weather_hourly.csv,Wind speed km/h,join on EAT hour,yes
+rain_3h,float,weather_hourly.csv,"Rain over the last 3 hours, mm",rolling sum of rain_mm (3 h),yes
+rain_6h,float,weather_hourly.csv,"Rain over the last 6 hours, mm",rolling sum of rain_mm (6 h),yes
+rain_24h,float,weather_hourly.csv,"Rain over the last 24 hours, mm",rolling sum of rain_mm (24 h),yes
+rain_class,int 0-3,weather_hourly.csv,none / light / moderate / heavy,"cut of rain_mm at [0.1, 2.5, 7.6] mm",yes
+rain_missing,int,weather_hourly.csv,Rain reading was missing and filled with 0,sentinel / gap flag,yes
+ev_football_match_pre,int,events_calendar.csv,football_match pre window active in this zone,1 if hour inside the pre window (2 h before start / start to end / 3 h after end); confirmed events only,yes
+ev_football_match_during,int,events_calendar.csv,football_match during window active in this zone,1 if hour inside the during window (2 h before start / start to end / 3 h after end); confirmed events only,yes
+ev_football_match_post,int,events_calendar.csv,football_match post window active in this zone,1 if hour inside the post window (2 h before start / start to end / 3 h after end); confirmed events only,yes
+ev_concert_pre,int,events_calendar.csv,concert pre window active in this zone,1 if hour inside the pre window (2 h before start / start to end / 3 h after end); confirmed events only,yes
+ev_concert_during,int,events_calendar.csv,concert during window active in this zone,1 if hour inside the during window (2 h before start / start to end / 3 h after end); confirmed events only,yes
+ev_concert_post,int,events_calendar.csv,concert post window active in this zone,1 if hour inside the post window (2 h before start / start to end / 3 h after end); confirmed events only,yes
+ev_conference_pre,int,events_calendar.csv,conference pre window active in this zone,1 if hour inside the pre window (2 h before start / start to end / 3 h after end); confirmed events only,yes
+ev_conference_during,int,events_calendar.csv,conference during window active in this zone,1 if hour inside the during window (2 h before start / start to end / 3 h after end); confirmed events only,yes
+ev_conference_post,int,events_calendar.csv,conference post window active in this zone,1 if hour inside the post window (2 h before start / start to end / 3 h after end); confirmed events only,yes
+ev_exhibition_pre,int,events_calendar.csv,exhibition pre window active in this zone,1 if hour inside the pre window (2 h before start / start to end / 3 h after end); confirmed events only,yes
+ev_exhibition_during,int,events_calendar.csv,exhibition during window active in this zone,1 if hour inside the during window (2 h before start / start to end / 3 h after end); confirmed events only,yes
+ev_exhibition_post,int,events_calendar.csv,exhibition post window active in this zone,1 if hour inside the post window (2 h before start / start to end / 3 h after end); confirmed events only,yes
+ev_road_closure_pre,int,events_calendar.csv,road_closure pre window active in this zone,1 if hour inside the pre window (2 h before start / start to end / 3 h after end); confirmed events only,yes
+ev_road_closure_during,int,events_calendar.csv,road_closure during window active in this zone,1 if hour inside the during window (2 h before start / start to end / 3 h after end); confirmed events only,yes
+ev_road_closure_post,int,events_calendar.csv,road_closure post window active in this zone,1 if hour inside the post window (2 h before start / start to end / 3 h after end); confirmed events only,yes
+ev_sports_run_pre,int,events_calendar.csv,sports_run pre window active in this zone,1 if hour inside the pre window (2 h before start / start to end / 3 h after end); confirmed events only,yes
+ev_sports_run_during,int,events_calendar.csv,sports_run during window active in this zone,1 if hour inside the during window (2 h before start / start to end / 3 h after end); confirmed events only,yes
+ev_sports_run_post,int,events_calendar.csv,sports_run post window active in this zone,1 if hour inside the post window (2 h before start / start to end / 3 h after end); confirmed events only,yes
+ev_n_windows,int,events_calendar.csv,Number of event windows active in the zone-hour,count of distinct events,yes
+ev_attendance_log,float,events_calendar.csv,Log of summed expected attendance of active windows,log1p(sum attendance); blanks = median of type (0 for types that never state attendance),yes
+ev_hours_to_next,float,events_calendar.csv,Hours until next event starts in the zone (cap 48),searchsorted on sorted starts,yes
+ev_hours_since_end,float,events_calendar.csv,Hours since last event ended in the zone (cap 48),searchsorted on sorted ends,yes
+lag_n_missing,int 0-3,ride_demand_train.csv,How many of the three lags were missing and had to be filled,count of NaN in lag_336h / lag_504h / lag_672h before filling,yes
+lag_336h,float,ride_demand_train.csv,Trips in the same zone 14 days earlier (spikes capped; holes filled),"shift(336 h); if missing: mean of the other lags, else train zone x hour-of-week mean",yes
+lag_504h,float,ride_demand_train.csv,Trips in the same zone 21 days earlier (holes filled),"shift(504 h); if missing: mean of the other lags, else train zone x hour-of-week mean",yes
+lag_672h,float,ride_demand_train.csv,Trips in the same zone 28 days earlier (holes filled),"shift(672 h); if missing: mean of the other lags, else train zone x hour-of-week mean",yes
+same_how_mean,float,ride_demand_train.csv,Mean of the three same-hour-of-week lags,"nanmean(lag_336h, lag_504h, lag_672h); if all missing: train zone x hour-of-week mean",yes
+level_28d,float,ride_demand_train.csv,Zone's mean trips over the 28 days ending 14 days earlier (trend level),shift(336).rolling(672); if missing (start of year / new zone): train zone mean,yes
+level_7d,float,ride_demand_train.csv,Zone's mean trips over the 7 days ending 14 days earlier,shift(336).rolling(168); if missing: train zone mean,yes
+level_ratio_7_28,float,ride_demand_train.csv,Short vs long level (momentum),level_7d / level_28d; 1.0 when either level was missing,yes

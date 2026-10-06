@@ -1,0 +1,18 @@
+A7 INTEGRITY CHECKS
+[PASS] 1 one row per zone-hour in train
+[PASS] 2 test has 4,032 unique row_ids in the original template order
+[PASS] 3 only the 12 zone labels in train and test
+[PASS] 4 train timestamps in 2025-01-01..2025-10-31 and test in 2025-11-01..2025-11-14
+[PASS] 5 no negative or sentinel values left (trips, rain, temperature range)
+[PASS] 6 weather join did not change the row count  (91584 -> 91584)
+[PASS] 7 no missing values in ANY feature column of train and test (lags and levels included)  (NaN train=0, test=0)
+[PASS] 8 train and test have identical feature columns
+[PASS] 9 no train-only column used as a feature
+[PASS] 10 every history-based feature is shifted by >= 14 days
+[PASS] 11 test lag_336h equals the (capped) trips of the same zone 14 days earlier  (3721 rows compared)
+[PASS] 12 test weather rows are all forecasts
+[PASS] 13 no x8 corrupted trip counts left (trips / active_drivers <= 2.5)  (max 1.84, max trips 321)
+[PASS] 14 no event has an end before its start; no road closure / holiday has a made-up crowd
+[PASS] 15 no negative wait times left in the ops table
+
+OVERALL: ALL PASS
