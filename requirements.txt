@@ -1,1 +1,6 @@
 # Project dependencies
+pandas
+numpy
+matplotlib
+seaborn
+jupyter
