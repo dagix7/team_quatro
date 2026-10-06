@@ -79,7 +79,7 @@ def load_weather_data():
     except FileNotFoundError:
         st.warning("Weather data not found. Using sample data.")
         # Generate sample data for demo
-        dates = pd.date_range(FORECAST_START, FORECAST_END + timedelta(days=1), freq='H')
+        dates = pd.date_range(FORECAST_START, FORECAST_END + timedelta(days=1), freq='h')
         return pd.DataFrame({
             'ts': dates,
             'temp_c': np.random.uniform(15, 28, len(dates)),
@@ -201,7 +201,7 @@ def predict_demand(model, zone, target_date, weather_df, events_df, zone_profile
         
         # Apply event effects
         for _, event in events.iterrows():
-            event_hours = pd.date_range(event['start'], event['end'], freq='H')
+            event_hours = pd.date_range(event['start'], event['end'], freq='h')
             for eh in event_hours:
                 if eh.date() == target_date:
                     hour = eh.hour
@@ -349,7 +349,7 @@ def main():
             
             # Event windows
             for _, event in events.iterrows():
-                event_hours_range = pd.date_range(event['start'], event['end'], freq='H')
+                event_hours_range = pd.date_range(event['start'], event['end'], freq='h')
                 event_hours_list = [h.hour for h in event_hours_range if h.date() == forecast_date]
                 
                 if event_hours_list:

@@ -22,8 +22,11 @@ RUN pip install --no-cache-dir -r app/requirements.txt
 # Copy application code
 COPY . .
 
-# Prepare assets
-RUN cd app && python prepare_assets.py || echo "Assets will be generated at runtime"
+# Create assets directory and prepare assets
+RUN mkdir -p /app/app/assets && \
+    cd app && \
+    python prepare_assets.py && \
+    ls -la assets/
 
 # Expose Streamlit port
 EXPOSE 8501
