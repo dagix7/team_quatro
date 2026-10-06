@@ -1,6 +1,6 @@
 # Team Quatro — Addis Ababa Ride Demand Forecast
 
-**🚀 Live Demo:** [http://3.126.82.53/](http://3.126.82.53/)
+**🚀 Live Demo:** https://teamquatro.streamlit.app/
 
 Qiyas AI Hackathon submission for the Addis Ababa ride-demand forecasting challenge.  
 Forecast target: hourly trip requests per zone, 1–14 November 2025 (4,032 zone-hours).
@@ -19,8 +19,7 @@ This project delivers a complete machine learning solution for predicting ride-s
 
 ## 🌐 Live Demo Application
 
-**Access the forecasting app:** [http://3.126.82.53/](http://3.126.82.53/)
-
+**Access the forecasting app:** https://teamquatro.streamlit.app/
 ### Features
 - **Simple Inputs:** Select zone and date (1-14 November 2025)
 - **Real-time Forecasts:** 24-hour demand predictions with confidence intervals
@@ -355,5 +354,5 @@ This project is submitted as part of the Qiyas AI Hackathon. All rights reserved
 
 For questions about this submission, please reach out through the hackathon platform.
 
-**Live Demo:** [http://3.126.82.53/](http://3.126.82.53/)  
+**Live Demo:** https://teamquatro.streamlit.app/
 **Repository:** [https://github.com/dagix7/team_quatro](https://github.com/dagix7/team_quatro)
