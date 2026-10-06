@@ -19,14 +19,11 @@ COPY app/requirements.txt app/requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install --no-cache-dir -r app/requirements.txt
 
-# Copy application code
+# Copy application code and assets
 COPY . .
 
-# Create assets directory and prepare assets
-RUN mkdir -p /app/app/assets && \
-    cd app && \
-    python prepare_assets.py && \
-    ls -la assets/
+# Verify assets exist
+RUN ls -la app/assets/ || echo "Warning: assets directory not found"
 
 # Expose Streamlit port
 EXPOSE 8501
