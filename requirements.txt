@@ -1,4 +1,11 @@
 # Project dependencies
+pandas>=2.0.0
+numpy>=1.24.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+scikit-learn>=1.3.0
+jupyter>=1.0.0
+notebook>=7.0.0
 pandas==3.0.2
 numpy==2.4.4
 scikit-learn==1.8.0
