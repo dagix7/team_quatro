@@ -123,9 +123,9 @@ for i, v in enumerate(zone_totals.values):
     ax.text(v + zone_totals.max()*0.01, i, f'{int(v):,}', va='center', fontsize=9)
 
 plt.tight_layout()
-plt.savefig(figures_dir / 'fig02_total_demand_by_zone.png', dpi=300, bbox_inches='tight')
+plt.savefig(figures_dir / 'fig02_before_after_cleaning.png', dpi=300, bbox_inches='tight')
 plt.close()
-print('✓ fig02_total_demand_by_zone.png saved')
+print('✓ fig02_before_after_cleaning.png saved')
 
 
 # =============================================================================
@@ -147,9 +147,9 @@ ax.set_title('Daily Ride Demand Trend Over Training Period')
 ax.grid(alpha=0.3)
 plt.xticks(rotation=45)
 plt.tight_layout()
-plt.savefig(figures_dir / 'fig03_hourly_demand_trend.png', dpi=300, bbox_inches='tight')
+plt.savefig(figures_dir / 'fig03_demand_trend_with_holidays.png', dpi=300, bbox_inches='tight')
 plt.close()
-print('✓ fig03_hourly_demand_trend.png saved')
+print('✓ fig03_demand_trend_with_holidays.png saved')
 
 
 # =============================================================================
@@ -211,9 +211,9 @@ ax.set_title('Diurnal Demand Profiles: High vs Low Volume Zones')
 ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
 ax.grid(alpha=0.3)
 plt.tight_layout()
-plt.savefig(figures_dir / 'fig05_zone_hourly_profiles.png', dpi=300, bbox_inches='tight')
+plt.savefig(figures_dir / 'fig05_zone_profiles.png', dpi=300, bbox_inches='tight')
 plt.close()
-print('✓ fig05_zone_hourly_profiles.png saved')
+print('✓ fig05_zone_profiles.png saved')
 
 
 # =============================================================================
@@ -235,9 +235,9 @@ sns.heatmap(corr_data, annot=True, fmt='.3f', cmap='coolwarm',
             vmin=-1, vmax=1)
 ax.set_title('Weather Variables vs Trips: Correlation Matrix')
 plt.tight_layout()
-plt.savefig(figures_dir / 'fig06_weather_correlation_matrix.png', dpi=300, bbox_inches='tight')
+plt.savefig(figures_dir / 'fig06_weather_timezone_check.png', dpi=300, bbox_inches='tight')
 plt.close()
-print('✓ fig06_weather_correlation_matrix.png saved')
+print('✓ fig06_weather_timezone_check.png saved')
 
 
 # =============================================================================
@@ -268,9 +268,9 @@ ax.set_xticklabels(rain_comparison.index, rotation=45)
 ax.legend()
 ax.grid(axis='y', alpha=0.3)
 plt.tight_layout()
-plt.savefig(figures_dir / 'fig07_rain_vs_demand_by_zone.png', dpi=300, bbox_inches='tight')
+plt.savefig(figures_dir / 'fig07_rain_effect.png', dpi=300, bbox_inches='tight')
 plt.close()
-print('✓ fig07_rain_vs_demand_by_zone.png saved')
+print('✓ fig07_rain_effect.png saved')
 
 
 # =============================================================================
@@ -304,9 +304,9 @@ ax.set_ylabel('Trips per Hour')
 ax.set_title('Demand Distribution: Regular Weekdays vs Public Holidays')
 ax.grid(axis='y', alpha=0.3)
 plt.tight_layout()
-plt.savefig(figures_dir / 'fig08_holiday_demand_shift.png', dpi=300, bbox_inches='tight')
+plt.savefig(figures_dir / 'fig08_event_study.png', dpi=300, bbox_inches='tight')
 plt.close()
-print('✓ fig08_holiday_demand_shift.png saved')
+print('✓ fig08_event_study.png saved')
 
 
 # =============================================================================
@@ -350,9 +350,9 @@ else:
     ax.set_title('Demand Surge Around Football Matches')
 
 plt.tight_layout()
-plt.savefig(figures_dir / 'fig09_football_event_window.png', dpi=300, bbox_inches='tight')
+plt.savefig(figures_dir / 'fig09_holiday_effects.png', dpi=300, bbox_inches='tight')
 plt.close()
-print('✓ fig09_football_event_window.png saved')
+print('✓ fig09_holiday_effects.png saved')
 
 
 # =============================================================================
@@ -406,9 +406,9 @@ else:
 
 ax.grid(axis='y', alpha=0.3)
 plt.tight_layout()
-plt.savefig(figures_dir / 'fig10_event_type_impact.png', dpi=300, bbox_inches='tight')
+plt.savefig(figures_dir / 'fig10_model_comparison.png', dpi=300, bbox_inches='tight')
 plt.close()
-print('✓ fig10_event_type_impact.png saved')
+print('✓ fig10_model_comparison.png saved')
 
 
 # =============================================================================
@@ -487,9 +487,9 @@ else:
     ax.set_title('System Outages and Zero-Trip Anomalies')
 
 plt.tight_layout()
-plt.savefig(figures_dir / 'fig11_residual_outages.png', dpi=300, bbox_inches='tight')
+plt.savefig(figures_dir / 'fig11_forecast_vs_actual.png', dpi=300, bbox_inches='tight')
 plt.close()
-print('✓ fig11_residual_outages.png saved')
+print('✓ fig11_forecast_vs_actual.png saved')
 
 
 # =============================================================================
@@ -501,6 +501,10 @@ try:
     from sklearn.ensemble import RandomForestRegressor
     from sklearn.model_selection import train_test_split
     
+    # Leakage fields — NEVER used as model features (post-event operational data)
+    LEAKAGE_FIELDS = ['avg_fare_birr', 'avg_wait_min', 'active_drivers',
+                      'wait_time', 'completed_trips', 'trips', 'row_id', 'ts', 'zone']
+
     # Prepare features for modeling
     feature_cols = [
         'hour', 'dow', 'is_weekend', 'day_of_month', 'month',
@@ -513,9 +517,10 @@ try:
         'lag_336h', 'lag_504h', 'lag_672h', 'same_how_mean',
         'level_28d', 'level_7d', 'level_ratio_7_28'
     ]
-    
-    # Filter to available columns
-    available_features = [col for col in feature_cols if col in master_train.columns]
+
+    # Filter to available columns, strictly excluding leakage fields
+    available_features = [col for col in feature_cols
+                          if col in master_train.columns and col not in LEAKAGE_FIELDS]
     
     # Prepare data (use a sample for speed)
     sample_size = min(50000, len(master_train))
