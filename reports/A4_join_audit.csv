@@ -1,0 +1,4 @@
+join,rows_before,rows_after,match_rate_pct,unmatched,rows_whose_hour_had_no_raw_weather,note
+train -> weather,83104,83104,100.0,0,2159.0,"hour missing in raw file -> interpolated (temp/humidity/wind), rain=0 + rain_missing flag"
+test -> weather,4032,4032,100.0,0,60.0,"hour missing in raw file -> interpolated (temp/humidity/wind), rain=0 + rain_missing flag"
+events (interval) -> zone-hours,91584,91584,100.0,0,,"139 zone-level events: 133 matched >=1 zone-hour, 6 cancelled and excluded, 15 holidays/school breaks used as day flags"

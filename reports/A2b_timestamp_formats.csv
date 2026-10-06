@@ -1,0 +1,16 @@
+table,format,rows,unparsed,slash_rows,slash_first_field_gt12,slash_second_field_gt12
+trips_train,iso_space,46886,0,25764,15713,0
+trips_train,dmy_slash,25764,0,25764,15713,0
+trips_train,iso_plus03,12810,0,25764,15713,0
+trips_test,iso_space,2261,0,1198,167,0
+trips_test,dmy_slash,1198,0,1198,167,0
+trips_test,iso_plus03,573,0,1198,167,0
+weather,iso_z,6806,0,732,412,0
+weather,dmy_slash,732,0,732,412,0
+events_start,iso_space,79,0,50,28,0
+events_start,dmy_slash,50,0,50,28,0
+events_start,mon_ampm,36,0,50,28,0
+events_end,iso_space,81,4,47,17,0
+events_end,dmy_slash,47,4,47,17,0
+events_end,mon_ampm,33,4,47,17,0
+events_end,unparsed,4,4,47,17,0
