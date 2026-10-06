@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  streamlit-app:
+    build: .
+    container_name: addis-ride-forecast
+    ports:
+      - "80:8501"
+    restart: unless-stopped
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./app/assets:/app/app/assets:ro
+      - ./models:/app/models:ro
+    mem_limit: 2g
+    mem_reservation: 1g
