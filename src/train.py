@@ -35,6 +35,19 @@ from sklearn.preprocessing import StandardScaler
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+REPO_ROOT = Path(__file__).resolve().parents[1]
+
+
+def _resolve_path(p: str | Path | None) -> Path | None:
+    if p is None:
+        return None
+    p = Path(p)
+    if p.is_absolute() or p.exists():
+        return p
+    if (REPO_ROOT / p).exists():
+        return REPO_ROOT / p
+    return REPO_ROOT / p
+
 from cleaning import TARGET, TIME_COL, ZONE_COL, load_ride_demand
 from features import (
     CALENDAR_TREND_FEATURES,
@@ -84,9 +97,12 @@ LGBM_PARAMS = {
 
 def prepare_data(config: dict, verbose: bool = True) -> pd.DataFrame:
     """Clean trip data, join weather+events features, add calendar features."""
-    trips = load_ride_demand(config["trips_path"], verbose=False)
-    weather = load_weather(config["weather_path"], verbose=verbose)
-    events = load_events(config["events_path"], verbose=verbose)
+    trips_path = _resolve_path(config["trips_path"])
+    weather_path = _resolve_path(config["weather_path"])
+    events_path = _resolve_path(config["events_path"])
+    trips = load_ride_demand(trips_path, verbose=False)
+    weather = load_weather(weather_path, verbose=verbose)
+    events = load_events(events_path, verbose=verbose)
     if verbose:
         print("[master] joining weather + events -> master frame")
     master = add_weather_features(trips, weather)
@@ -94,11 +110,15 @@ def prepare_data(config: dict, verbose: bool = True) -> pd.DataFrame:
     master = add_calendar_features(master)
 
     # Export master_train.csv (Deliverable A8)
-    master_train_out = Path("data/processed/master_train.csv")
-    master_train_out.parent.mkdir(parents=True, exist_ok=True)
-    master.to_csv(master_train_out, index=False)
-    if verbose:
-        print(f"[master] Exported {len(master)} rows to {master_train_out} (0 NaNs in features)")
+    master_train_out = REPO_ROOT / "data/processed/master_train.csv"
+    try:
+        master_train_out.parent.mkdir(parents=True, exist_ok=True)
+        master.to_csv(str(master_train_out), index=False)
+        if verbose:
+            print(f"[master] Exported {len(master)} rows to {master_train_out} (0 NaNs in features)")
+    except Exception as err:
+        if verbose:
+            print(f"[master] (Notice: could not re-write {master_train_out}: {err})")
     return master
 
 
@@ -501,7 +521,12 @@ def md_table(df: pd.DataFrame) -> str:
 
 
 # --------------------------------------------------------------------------- main
-def run_experiment(config: dict, quick: bool, n_trials: int) -> dict:
+def run_experiment(config: dict | None = None, quick: bool = False, n_trials: int = 15) -> dict:
+    cfg = dict(CONFIG if config is None else config)
+    for k in ["trips_path", "weather_path", "events_path", "model_out", "report_out"]:
+        if k in cfg:
+            cfg[k] = _resolve_path(cfg[k])
+    config = cfg
     sections: list[str] = []
     df = prepare_data(config)
     split = time_based_split(df, config["val_start"], config["val_end"])
@@ -709,6 +734,19 @@ def run_experiment(config: dict, quick: bool, n_trials: int) -> dict:
         ),
     }
 
+    # Aliases for notebook and programmatic access
+    results["baselines"] = pd.DataFrame(d1).T[["rmse", "mae"]]
+    results["comparison"] = pd.DataFrame(d2).T if not quick else pd.DataFrame(d1).T[["rmse", "mae"]]
+    results["rolling"] = pd.DataFrame(d3.get("rows", [])) if not quick else pd.DataFrame()
+    results["ablation"] = pd.DataFrame(d5).T
+    results["tuning"] = {"best_params": final_params or LGBM_PARAMS}
+    results["errors"] = {"top_errors": d7["top10"]}
+    results["response"] = pd.DataFrame([
+        {"model": "Before (D5 +both)", "rmse": d5["+both"]["rmse"]},
+        {"model": "After (D8 clipped+payday)", "rmse": d8["rmse_after_clip"]},
+    ])
+    results["plain_metric"] = d9
+
     header = (
         "# D — Modeling & Evaluation\n\n"
         f"Validation window: **{config['val_start']} -> {config['val_end']}** (chronological, "
@@ -717,11 +755,12 @@ def run_experiment(config: dict, quick: bool, n_trials: int) -> dict:
         f"train {train[TIME_COL].min().date()} -> {train[TIME_COL].max().date()} "
         f"({len(train)} rows).\n\n"
     )
-    Path(config["report_out"]).parent.mkdir(parents=True, exist_ok=True)
-    Path(config["report_out"]).write_text(
+    report_path = _resolve_path(config["report_out"])
+    report_path.parent.mkdir(parents=True, exist_ok=True)
+    report_path.write_text(
         header + "\n".join(sections), encoding="utf-8"
     )
-    print(f"\n[report] written -> {config['report_out']}")
+    print(f"\n[report] written -> {report_path}")
 
     final_best_params = {**LGBM_PARAMS, **(final_params or {})}
     _, _, final_val_pred, _ = fit_lgbm(
@@ -733,9 +772,14 @@ def run_experiment(config: dict, quick: bool, n_trials: int) -> dict:
     X_full, y_full = build_xy(df, features_full)
     demo_model.fit(X_full, y_full, categorical_feature=[ZONE_COL])
     bundle = {"model": demo_model, "features": features_full, "params": final_best_params}
-    export_model(bundle, config["model_out"])
-    print(f"[export] model + features + params -> {config['model_out']}")
+    model_path = _resolve_path(config["model_out"])
+    model_path.parent.mkdir(parents=True, exist_ok=True)
+    export_model(bundle, model_path)
+    print(f"[export] model + features + params -> {model_path}")
     return results
+
+
+run_pipeline = run_experiment
 
 
 def parse_args() -> argparse.Namespace:

@@ -16,10 +16,10 @@ Seasonal-naive beats the global mean by ~2x on RMSE (17.16 vs 30.16) and ~3x on 
 |                        |    rmse |      mae |   fit_time_s |   n_estimators |
 |:-----------------------|--------:|---------:|-------------:|---------------:|
 | seasonal_naive         | 17.1596 |  7.52717 |         0    |            nan |
-| ridge                  | 25.4425 | 16.8701  |         0.58 |            nan |
-| random_forest          | 15.7846 |  6.58024 |        27.19 |            nan |
-| hist_gradient_boosting | 15.7833 |  6.88068 |         5.47 |            nan |
-| lightgbm               | 15.723  |  6.77893 |         3.64 |            324 |
+| ridge                  | 25.4425 | 16.8701  |         0.21 |            nan |
+| random_forest          | 15.7846 |  6.58024 |        25.24 |            nan |
+| hist_gradient_boosting | 15.7833 |  6.88068 |         3.87 |            nan |
+| lightgbm               | 15.723  |  6.77893 |         2.28 |            324 |
 | mean_predictor         | 30.1647 | 20.7906  |         0    |            nan |
 
 Best RMSE: **random_forest** (15.73); LightGBM (15.79) is within 0.06. We select **LightGBM** as the final family: it ties Random Forest on accuracy at a tenth of the training time (3 s vs 30 s) and natively handles the categorical zone, which also makes it fast to retrain in the demo. All four families beat seasonal-naive, and ridge (26.06) confirms the signal is non-linear.

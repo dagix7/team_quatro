@@ -37,7 +37,8 @@ plt.rcParams["font.sans-serif"] = ["DejaVu Sans", "Arial", "Helvetica"]
 plt.rcParams["axes.edgecolor"] = "#cccccc"
 plt.rcParams["axes.linewidth"] = 0.8
 
-FIG_DIR = Path("figures")
+REPO_ROOT = Path(__file__).resolve().parents[1]
+FIG_DIR = REPO_ROOT / "figures"
 FIG_DIR.mkdir(parents=True, exist_ok=True)
 DPI = 150
 
@@ -52,16 +53,16 @@ def save_fig(fig: plt.Figure, name: str) -> None:
 
 def generate_all_figures():
     print("[figures] Loading processed and raw datasets...")
-    train_path = Path("data/processed/master_train.csv")
+    train_path = REPO_ROOT / "data/processed/master_train.csv"
     if not train_path.exists():
         raise FileNotFoundError("Run train.py or export_master first.")
 
     df_train = pd.read_csv(train_path)
     df_train["pickup_hour"] = pd.to_datetime(df_train["pickup_hour"])
 
-    raw_trips = pd.read_csv("data/raw/ride_demand_train.csv")
-    raw_weather = pd.read_csv("data/raw/weather_hourly.csv")
-    raw_events = pd.read_csv("data/raw/events_calendar.csv")
+    raw_trips = pd.read_csv(REPO_ROOT / "data/raw/ride_demand_train.csv")
+    raw_weather = pd.read_csv(REPO_ROOT / "data/raw/weather_hourly.csv")
+    raw_events = pd.read_csv(REPO_ROOT / "data/raw/events_calendar.csv")
 
     # -------------------------------------------------------------
     # Fig 01: Gaps and Missingness
@@ -312,7 +313,7 @@ def generate_all_figures():
     fig, axes = plt.subplots(3, 1, figsize=(14, 9), sharex=True)
     oct_sample = df_train[(df_train["pickup_hour"] >= "2025-10-18") & (df_train["pickup_hour"] <= "2025-10-25")]
 
-    bundle = joblib.load("models/final_model.joblib")
+    bundle = joblib.load(REPO_ROOT / "models/final_model.joblib")
     features = bundle["features"]
     model = bundle["model"]
 
